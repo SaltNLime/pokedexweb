@@ -1,0 +1,691 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive; /* Retro pixel font */
+}
+
+:root {
+    /* Game Boy Classic Palette */
+    --gb-darkest: #0f380f;
+    --gb-dark: #306230;
+    --gb-light: #8bac0f;
+    --gb-lightest: #9bbc0f;
+}
+
+body {
+    background-color: var(--gb-lightest); /* Lightest green background */
+    color: var(--gb-darkest); /* Darkest green text */
+    line-height: 1.6;
+    padding: 15px;
+}
+
+header {
+    background-color: var(--gb-darkest);
+    color: var(--gb-lightest);
+    padding: 10px 0;
+    text-align: center;
+    margin-bottom: 15px;
+    border: 3px solid var(--gb-darkest);
+    border-radius: 0; /* Sharp edges */
+    text-shadow: 2px 2px var(--gb-dark);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8em; /* Smaller pixel font size */
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.controls input[type="text"],
+.controls select {
+    padding: 8px;
+    border: 2px solid var(--gb-darkest);
+    border-radius: 0;
+    font-size: 0.8em;
+    background-color: var(--gb-lightest);
+    color: var(--gb-darkest);
+    min-width: 150px; /* Adjusted min-width for potentially 3 controls */
+    font-family: 'Press Start 2P', cursive;
+}
+
+.controls input::placeholder {
+    color: var(--gb-dark);
+}
+
+.controls select {
+    cursor: pointer;
+}
+
+/* Container for Controls and Toggle */
+.controls-container {
+    display: flex;
+    flex-direction: column; /* Stack controls and toggle */
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Toggle Switch Styles */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--gb-light);
+    padding: 5px 10px;
+    border: 2px solid var(--gb-darkest);
+    box-shadow: 2px 2px 0px var(--gb-darkest);
+}
+
+.toggle-label {
+    font-size: 0.7em;
+}
+
+#sprite-mode-label {
+    font-size: 0.7em;
+    font-weight: bold;
+    min-width: 80px; /* Prevent layout shift */
+    text-align: center;
+    background-color: var(--gb-darkest);
+    color: var(--gb-lightest);
+    padding: 2px 4px;
+}
+
+.sprite-toggle {
+    position: relative;
+    display: inline-block;
+    width: 40px; /* Width of the toggle */
+    height: 20px; /* Height of the toggle */
+}
+
+.sprite-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gb-dark);
+    border: 1px solid var(--gb-darkest);
+    transition: .3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px; /* Height of the knob */
+    width: 14px; /* Width of the knob */
+    left: 2px; /* Initial position */
+    bottom: 2px;
+    background-color: var(--gb-lightest);
+    border: 1px solid var(--gb-darkest);
+    transition: .3s;
+}
+
+input:checked + .slider {
+    background-color: var(--gb-dark); /* Can change color when active */
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px); /* Move knob to the right */
+}
+
+#pokedex-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted size */
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.pokemon-card {
+    /* Default card color - can be one of the GB greens */
+    background-color: var(--gb-light);
+    border: 2px solid var(--gb-darkest);
+    border-radius: 0; /* Sharp corners */
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    /* transition: background-color 0.2s ease-in-out; Remove background transition */
+    transition: box-shadow 0.2s ease-in-out, transform 0.1s ease-in-out; /* Smooth glow and active */
+    box-shadow: 3px 3px 0px var(--gb-darkest); /* Hard shadow */
+    position: relative; /* For potential pseudo-elements */
+    color: var(--gb-darkest); /* Ensure text is readable on colored backgrounds */
+}
+
+.pokemon-card:hover {
+    /* background-color: var(--gb-lightest); Remove background change */
+    transform: none; /* Keep transform for active state */
+    /* Glow effect */
+    box-shadow: 0 0 8px 2px var(--gb-lightest), 0 0 0 1px var(--gb-darkest); /* Glow + subtle border */
+}
+
+.pokemon-card:active {
+     box-shadow: none; /* Remove shadow */
+     transform: translate(2px, 2px); /* Keep slight push */
+}
+
+/* Button for showing forms on the card */
+.show-forms-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: var(--gb-darkest);
+    color: var(--gb-lightest);
+    border: 1px solid var(--gb-darkest);
+    font-size: 0.6em;
+    padding: 1px 4px;
+    cursor: pointer;
+    z-index: 5; /* Ensure it's clickable above other elements */
+    box-shadow: 1px 1px 0px var(--gb-dark);
+}
+
+.show-forms-button:hover {
+    background-color: var(--gb-dark);
+}
+
+.show-forms-button:active {
+    background-color: var(--gb-darkest);
+    box-shadow: none;
+    transform: translate(1px, 1px);
+}
+
+.pokemon-card img {
+    max-width: 72px; /* Smaller sprite size */
+    height: 72px;
+    margin-bottom: 8px;
+    /* image-rendering: pixelated;  Handled by body class */
+    object-fit: contain;
+    /* background-color: rgba(255, 255, 255, 0.2); Removed background */
+    /* border: 1px solid var(--gb-dark); Removed border */
+}
+
+.pokemon-card h3 {
+    margin: 5px 0;
+    font-size: 0.9em;
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Handle long names */
+}
+
+.pokemon-card p {
+    font-size: 0.8em;
+    color: var(--gb-darkest);
+}
+
+/* --- Type Background Colors for Cards --- */
+/* Using slightly desaturated/muted versions for the GB feel */
+.type-normal-card { background-color: #a0a1a0; color: #0f380f; }
+.type-fire-card { background-color: #e5914e; color: #0f380f; }
+.type-water-card { background-color: #7c9ce5; color: #0f380f; }
+.type-electric-card { background-color: #e5c74e; color: #0f380f; }
+.type-grass-card { background-color: #8bbf6d; color: #0f380f; }
+.type-ice-card { background-color: #9cdada; color: #0f380f; }
+.type-fighting-card { background-color: #c55751; color: #fff; } /* Darker requires lighter text */
+.type-poison-card { background-color: #a96ac9; color: #fff; }
+.type-ground-card { background-color: #d6bb79; color: #0f380f; }
+.type-flying-card { background-color: #a995e8; color: #0f380f; }
+.type-psychic-card { background-color: #e87b9e; color: #0f380f; }
+.type-bug-card { background-color: #b1bd4c; color: #0f380f; }
+.type-rock-card { background-color: #c0aa5e; color: #0f380f; }
+.type-ghost-card { background-color: #8674a4; color: #fff; }
+.type-dragon-card { background-color: #8655f6; color: #fff; }
+.type-dark-card { background-color: #86746a; color: #fff; }
+.type-steel-card { background-color: #bbbbce; color: #0f380f; }
+.type-fairy-card { background-color: #eaa8b8; color: #0f380f; }
+
+/* Ensure card text remains readable on different backgrounds */
+/* REMOVED these rules to keep text color consistent (gb-darkest) */
+/*
+.pokemon-card.type-fighting-card h3,
+.pokemon-card.type-fighting-card p,
+.pokemon-card.type-poison-card h3,
+.pokemon-card.type-poison-card p,
+.pokemon-card.type-ghost-card h3,
+.pokemon-card.type-ghost-card p,
+.pokemon-card.type-dragon-card h3,
+.pokemon-card.type-dragon-card p,
+.pokemon-card.type-dark-card h3,
+.pokemon-card.type-dark-card p {
+    color: var(--gb-lightest);
+}
+.pokemon-card.type-fighting-card:hover,
+.pokemon-card.type-poison-card:hover,
+.pokemon-card.type-ghost-card:hover,
+.pokemon-card.type-dragon-card:hover,
+.pokemon-card.type-dark-card:hover {
+    background-color: var(--gb-lightest);
+}
+*/
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(15, 56, 15, 0.8); /* Dark green overlay */
+    padding-top: 5%;
+}
+
+.modal-content {
+    background-color: var(--gb-lightest);
+    margin: 5% auto;
+    padding: 15px;
+    border: 3px solid var(--gb-darkest);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 0;
+    position: relative;
+    box-shadow: 4px 4px 0px var(--gb-darkest);
+}
+
+.close-button {
+    color: var(--gb-darkest);
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: sans-serif; /* Use a more standard font for X */
+    line-height: 1;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--gb-light);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 5px 0;
+    text-align: center;
+}
+
+.modal-body h2 {
+    text-transform: capitalize;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.modal-body img {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 10px;
+    /* image-rendering: pixelated; Handled by body class */
+    object-fit: contain;
+    /* background-color: var(--gb-light); Removed background */
+    /* border: 2px solid var(--gb-darkest); Removed border */
+}
+
+.modal-body .types {
+    margin-bottom: 15px;
+}
+
+/* Type Tags - Keep original colors for contrast */
+.modal-body .types span {
+    display: inline-block;
+    padding: 3px 8px;
+    margin: 0 3px;
+    border-radius: 3px;
+    color: #fff;
+    text-transform: capitalize;
+    font-weight: normal; /* Normal weight for pixel font */
+    font-size: 0.7em;
+    border: 1px solid rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+/* Re-define type colors specifically for tags if needed, or keep original */
+.type-normal { background-color: #A8A878; }
+.type-fire { background-color: #F08030; }
+.type-water { background-color: #6890F0; }
+.type-electric { background-color: #F8D030; }
+.type-grass { background-color: #78C850; }
+.type-ice { background-color: #98D8D8; }
+.type-fighting { background-color: #C03028; }
+.type-poison { background-color: #A040A0; }
+.type-ground { background-color: #E0C068; }
+.type-flying { background-color: #A890F0; }
+.type-psychic { background-color: #F85888; }
+.type-bug { background-color: #A8B820; }
+.type-rock { background-color: #B8A038; }
+.type-ghost { background-color: #705898; }
+.type-dragon { background-color: #7038F8; }
+.type-dark { background-color: #705848; }
+.type-steel { background-color: #B8B8D0; }
+.type-fairy { background-color: #EE99AC; }
+
+
+/* Styles for sections within the modal */
+.details-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px dashed var(--gb-dark);
+}
+
+.details-section h3 {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 1em;
+    color: var(--gb-darkest);
+}
+
+/* Abilities List */
+.abilities ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 90%;
+    text-align: center;
+}
+
+.abilities li {
+    display: inline-block;
+    background-color: var(--gb-light);
+    padding: 3px 6px;
+    margin: 2px;
+    border-radius: 0;
+    border: 1px solid var(--gb-darkest);
+    font-size: 0.7em;
+    text-transform: capitalize;
+}
+
+.abilities li.hidden-ability {
+    font-style: normal; /* Remove italic for pixel font */
+    background-color: var(--gb-dark);
+    color: var(--gb-lightest);
+    border: 1px solid var(--gb-darkest);
+}
+
+/* Pokédex Entry */
+.pokedex-entry p {
+    text-align: left;
+    font-style: normal; /* Remove italic */
+    color: var(--gb-darkest);
+    padding: 0 5px;
+    line-height: 1.4;
+    font-size: 0.8em;
+    background-color: var(--gb-light);
+    border: 1px solid var(--gb-dark);
+    padding: 5px;
+}
+
+
+.modal-body .stats {
+    margin-top: 15px;
+    text-align: left;
+}
+
+/* Stats */
+.stat {
+    display: grid;
+    grid-template-columns: 80px 1fr 30px; /* Label, Bar, Value */
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+    font-size: 0.8em;
+}
+
+.stat span:first-child {
+    text-transform: capitalize;
+    font-weight: normal;
+    text-align: right;
+}
+
+.stat-bar {
+    background-color: var(--gb-dark);
+    border-radius: 0;
+    border: 1px solid var(--gb-darkest);
+    height: 8px;
+    overflow: hidden;
+    width: 100%;
+    padding: 1px; /* Inner padding effect */
+}
+
+.stat-bar-fill {
+    height: 100%;
+    border-radius: 0;
+    transition: width 0.5s ease-in-out;
+    /* Stat colors handled by JS or can override here */
+    background-color: var(--gb-light); /* Default fill */
+}
+
+.stat span:last-child {
+    text-align: right;
+    font-weight: normal;
+}
+
+/* Recommendation Section */
+#recommendation-section {
+    display: none; /* Hidden initially */
+    margin-top: 25px;
+    padding: 15px;
+    background-color: var(--gb-light);
+    border-radius: 0;
+    border: 2px solid var(--gb-darkest);
+    box-shadow: 3px 3px 0px var(--gb-darkest);
+}
+
+#recommendation-section h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--gb-darkest);
+    font-size: 1em;
+}
+
+#recommendations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+/* Error Message */
+.error {
+    color: var(--gb-darkest);
+    background-color: #e5914e; /* Use a contrasting GB-ish color */
+    border: 2px solid var(--gb-darkest);
+    padding: 8px;
+    border-radius: 0;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+/* Control image rendering globally via body class */
+body.pixelated-sprites img {
+    image-rendering: pixelated;
+}
+
+body.smooth-sprites img {
+    image-rendering: auto; /* Or unset */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    /* Adjust container for smaller screens */
+    .controls-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+     .controls {
+        width: 100%; /* Make search/filter take full width */
+    }
+    .toggle-container {
+        justify-content: center;
+        width: 100%;
+        padding: 5px;
+        box-shadow: 1px 1px 0px var(--gb-darkest);
+    }
+     .toggle-label, #sprite-mode-label {
+        font-size: 0.6em;
+    }
+    #sprite-mode-label {
+        min-width: 70px;
+    }
+     .sprite-toggle {
+        width: 34px;
+        height: 17px;
+    }
+    .slider:before {
+        height: 11px;
+        width: 11px;
+        left: 2px;
+        bottom: 2px;
+    }
+    input:checked + .slider:before {
+        transform: translateX(17px);
+    }
+
+    header h1 {
+        font-size: 1.5em;
+    }
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .controls input[type="text"],
+    .controls select {
+        min-width: unset;
+        width: 100%;
+        font-size: 0.7em;
+    }
+    #pokedex-display {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 8px;
+    }
+    .pokemon-card {
+        padding: 8px;
+        box-shadow: 2px 2px 0px var(--gb-darkest);
+    }
+     .pokemon-card:active {
+        box-shadow: none;
+        transform: translate(2px, 2px);
+    }
+    .pokemon-card img {
+        max-width: 60px;
+        height: 60px;
+    }
+    .pokemon-card h3 {
+        font-size: 0.8em;
+    }
+     .pokemon-card p {
+        font-size: 0.7em;
+    }
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 10px;
+        box-shadow: 3px 3px 0px var(--gb-darkest);
+    }
+     .modal-body h2 {
+        font-size: 1em;
+    }
+     .modal-body img {
+        width: 80px;
+        height: 80px;
+    }
+     .modal-body .types span {
+        font-size: 0.6em;
+        padding: 2px 5px;
+    }
+     .details-section h3 {
+        font-size: 0.9em;
+    }
+     .abilities li {
+        font-size: 0.6em;
+    }
+     .pokedex-entry p {
+        font-size: 0.7em;
+    }
+    .stat {
+        grid-template-columns: 60px 1fr 25px; /* Adjust stat layout */
+        gap: 4px;
+        font-size: 0.7em;
+    }
+    #recommendation-section h2 {
+        font-size: 0.9em;
+    }
+} 
+
+/* Alternate Forms Modal Styles */
+#forms-modal-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    max-height: 60vh; /* Limit height and allow scrolling */
+    overflow-y: auto;
+    padding: 10px;
+    background-color: var(--gb-light);
+    border: 1px solid var(--gb-dark);
+    margin-top: 10px;
+}
+
+.form-card {
+    text-align: center;
+    padding: 5px;
+    border: 1px solid var(--gb-darkest);
+    background-color: var(--gb-lightest);
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.form-card:hover {
+    background-color: var(--gb-light);
+}
+
+.form-card img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    /* image-rendering handled by body class */
+}
+
+.form-card p {
+    font-size: 0.7em;
+    text-transform: capitalize;
+    color: var(--gb-darkest);
+    word-break: break-word; /* Handle long form names */
+}
+
+/* Style scrollbar for forms modal */
+#forms-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+#forms-modal-body::-webkit-scrollbar-track {
+    background: var(--gb-light);
+    border-left: 1px solid var(--gb-dark);
+}
+
+#forms-modal-body::-webkit-scrollbar-thumb {
+    background: var(--gb-darkest);
+}
+
+#forms-modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--gb-dark);
+} 

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Pokédex</h1>
+    </header>
+
+    <div class="controls-container">
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Search Pokémon...">
+            <select id="type-filter">
+                <option value="">Filter by type...</option>
+                <!-- Types will be populated by JS -->
+            </select>
+            <select id="gen-filter">
+                <option value="">Filter by Gen...</option>
+                <!-- Generations will be populated by JS -->
+            </select>
+        </div>
+        <div class="toggle-container">
+            <span class="toggle-label">Sprite:</span>
+            <span id="sprite-mode-label">2D Animated</span>
+            <label class="sprite-toggle" for="sprite-switch">
+                <input type="checkbox" id="sprite-switch">
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-label">3D Static</span>
+        </div>
+    </div>
+
+    <main>
+        <div id="pokedex-display">
+            <!-- Pokémon cards will be loaded here -->
+            <p>Loading Pokémon...</p>
+        </div>
+
+        <div id="recommendation-section">
+             <h2>Can't find your Pokémon? Maybe one of these?</h2>
+             <div id="recommendations">
+                 <!-- Recommendation cards will appear here -->
+             </div>
+        </div>
+    </main>
+
+    <!-- Pokemon Detail Modal -->
+    <div id="pokemon-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div id="modal-body">
+                <!-- Details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Alternate Forms Modal -->
+    <div id="pokemon-forms-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button forms-close-button">&times;</span>
+            <h2 id="forms-modal-title">Alternate Forms</h2>
+            <div id="forms-modal-body">
+                <!-- Form details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
